@@ -27,26 +27,26 @@ myAccount.login()
 
 # Function To display Owner's Details
 def DisplayOwnerAccountInfo():
-  print ("Your Account Information :")
-  data = myAccount.getMyUserInfo()
-  for key, value in data.items():
-      print (key,value)
+    print ("Your Account Information :")
+    data = myAccount.getMyUserInfo()
+    for key, value in data.items():
+        print (key, value)
 
 # Function to Display Followers
 def DisplayMyFollowers():
     print ("They are Following You:")
     print ("========================")
     for followers in myAccount.getMyFollowers():
-      print(followers.screen_name)
+        print(followers.screen_name)
     print ("========================")
 
 # Function to List the users that you Follow
 def DisplayFollowingMe():
-  print ("You are Following:")
-  print ("========================")
-  for following in myAccount.getMyFollowings():
-    print(following.screen_name)
-  print ("========================")
+    print ("You are Following:")
+    print ("========================")
+    for following in myAccount.getMyFollowings():
+        print(following.screen_name)
+    print ("========================")
 
 #Function To get other users Info
 def DisplayUserInfo(user_name):
@@ -59,6 +59,7 @@ def DisplayUserInfo(user_name):
 # To Follow and Unfollow we need to uncomment following:
 # myAccount.follow('smm_taheri')
 # myAccount.unfollow('smm_taheri')
+
 
 def helpCommand():
   print("""Enter "myaccountinfo" to show the information of your account""")
@@ -102,5 +103,16 @@ def main():
 
     print(">>> ", end='')
     command = input()
+    while str(command) != "exit":
+        if command == "help":
+            helpCommand()
+        elif command == "myaccountinfo":
+            DisplayOwnerAccountInfo()
+        elif command == "myfollowers":
+            DisplayMyFollowers()
+        elif command == "myfollowings":
+            DisplayFollowingMe()
+        print(">>> ", end='')
+        command = input()
 
 main()
