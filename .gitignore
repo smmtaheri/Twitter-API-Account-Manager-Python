@@ -5,3 +5,7 @@ src/config/config.ini
 *.swp
 src/libs/__pycache__/
 src/libs/.CLI_history
+build/
+dist/
+sdist/
+tweeli.egg-info
