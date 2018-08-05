@@ -15,20 +15,22 @@ def read_me():
     with open("README.md", "r") as fh:
         return fh.read()
 
-setup(name="tweeli",
+description = 'CLI for Twitter With some cool features.'
+
+setup(name='tweeli',
       version=get_version(),
-      description="You can using Twitter in CLI mode",
-      license="MIT",
-      author="Mohammad Taheri",
-      author_email="admirer135@yahoo.com",
+      description=description,
+      license='MIT',
+      author='Mohammad Taheri',
+      author_email='admirer135@yahoo.com',
       long_description=read_me(),
-      long_description_content_type="text/markdown",
-      url="http://github.com/smmtaheri/tweeli",
+      long_description_content_type='text/markdown',
+      url='http://github.com/smmtaheri/tweeli',
       packages=find_packages(),
       install_requires=[
-          "tweepy>=3.0.0",
+          'tweepy>=3.0.0',
       ],
-      keywords="twitter CLI library",
+      keywords=['twitter CLI, ],
       python_requires='>=2.7',
       classifiers=[
           'Development Status :: 4 - Beta',
