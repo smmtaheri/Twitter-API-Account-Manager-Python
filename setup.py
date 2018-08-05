@@ -1,35 +1,36 @@
 #!/usr/bin/env python
 
 import re
-from setuptools import setup, find_packages
 
-VERSIONFILE = "tweeli/__init__.py"
-ver_file = open(VERSIONFILE, "rt").read()
-VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
-mo = re.search(VSRE, ver_file, re.M)
+from setuptools import find_packages, setup
 
-if mo:
-    version = mo.group(1)
-else:
-    raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
+# Get version without importing, which avoids dependency issues
+def get_version():
+    with open('tweeli/version.py') as version_file:
+        return re.search(r"""__version__\s+=\s+(['"])(?P<version>.+?)\1""",
+                version_file.read()).group('version')
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+# Get README.md file
+def read_me():
+    with open("README.md", "r") as fh:
+        return fh.read()
 
-setup(name="tweeli",
-      version=version,
-      description="You can using Twitter in CLI mode",
-      license="MIT",
-      author="Mohammad Taheri",
-      author_email="admirer135@yahoo.com",
-      long_description=long_description,
-      long_description_content_type="text/markdown",
-      url="http://github.com/smmtaheri/tweeli",
+description = 'CLI for Twitter With some cool features.'
+
+setup(name='tweeli',
+      version=get_version(),
+      description=description,
+      license='MIT',
+      author='Mohammad Taheri',
+      author_email='admirer135@yahoo.com',
+      long_description=read_me(),
+      long_description_content_type='text/markdown',
+      url='http://github.com/smmtaheri/tweeli',
       packages=find_packages(),
       install_requires=[
-          "tweepy>=3.0.0",
+          'tweepy>=3.0.0',
       ],
-      keywords="twitter CLI library",
+      keywords=['twitter CLI, ],
       python_requires='>=2.7',
       classifiers=[
           'Development Status :: 4 - Beta',
@@ -42,4 +43,4 @@ setup(name="tweeli",
           'Programming Language :: Python :: 3',
           'Programming Language :: Python :: 3.6',
       ],
-      zip_safe=True)
+      )

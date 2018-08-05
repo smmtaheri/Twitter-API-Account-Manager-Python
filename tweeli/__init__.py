@@ -4,7 +4,6 @@ Twitter in CLI mode
 """
 name = "tweeli"
 
-__version__ = '1.0.1'
 __author__ = 'Mohammad Taheri'
 __license__ = 'MIT'
 
