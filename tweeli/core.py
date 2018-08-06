@@ -1,30 +1,58 @@
 
+import configparser
 import json
-from configparser import ConfigParser
-from os import path
+import os
 
 # third-party imports
 import tweepy
 
-DEFAULT_CONFIG_PATH = 'config/config.ini'
 
 class TwitterCore:
-
-    def __init__(self):
+    def __init__(self, cfg='config.ini'):
         self.__account = None
+        self.cfg = cfg
+        self.read_config()
+
+    def read_config(self, another_cfg=None):
+        """
+        Read configuration file
+        """
+        if another_cfg:
+            self.cfg = another_cfg
+        else:
+            module_path = os.path.dirname(os.path.abspath(__file__))
+            self.cfg = module_path + self.cfg
+        parser = configparser.ConfigParser()
+        parser.read(self.cfg)
+        self.parser = parser
+    
+    def get_config(self):
+        '''
+        Returns configuration parameters from self.parser
+        '''
+        consumer_key = self.parser.get('Auth', 'ConsumerKey')
+        consumer_secret = self.parser.get('Auth', 'ConsumerSecret')
+        access_key = self.parser.get('Auth', 'AccessKey')
+        access_key = self.parser.get('Auth', 'AccessSecret')
+        proxy = None
+        if self.parser.getboolean('Proxy', 'Enabled'):
+            proxy_url = self.parser.get('Proxy', 'ProxyURL')
+            proxy_port = self.parser.get('Proxy', 'ProxyPort')
+            proxy = proxy_url + ':' + proxy_port
+
+        return consumer_key, consumer_secret, access_key, access_secret, proxy
 
     def login(self, **kwargs):
         'Login to account'
 
         if kwargs == {}:
             # Get params from config file
-            parser = self.__initConfig(DEFAULT_CONFIG_PATH)
-            consumerKey, consumerSecret, accessKey, accessSecret, proxy = self.__getConfig(parser)
+            consumerKey, consumerSecret, accessKey, accessSecret, proxy = self.get_config()
         elif "configPath" in kwargs:
             # Get params from config file
             configPath = kwargs["configPath"]
-            parser = self.__initConfig(configPath)
-            consumerKey, consumerSecret, accessKey, accessSecret, proxy = self.__getConfig(parser)
+            self.read_config(another_cfg=configPath)
+            consumerKey, consumerSecret, accessKey, accessSecret, proxy = self.get_config()
         else:
             if "consumerKey" in kwargs:
                 consumerKey = kwargs["consumerKey"]
@@ -54,38 +82,6 @@ class TwitterCore:
         else:
             self.__account = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True, proxy=proxy)
         return True
-
-    def __initConfig(self, configPath):
-        'Return parser of config file'
-
-        # Check config file is exist or not
-        if not path.exists(configPath):
-            print('[X] Config file is not exist or is invalid.')
-            exit(1)
-
-        # Read config file
-        parser = ConfigParser()
-        parser.read(configPath)
-        return parser
-
-    def __getConfig(self, parser):
-        'Return config params from config file parser'
-
-        # Get application parameters
-        consumerKey = parser.get('api', 'CONSUMERKEY')
-        consumerSecret = parser.get('api', 'CONSUMERSECRET')
-        accessKey = parser.get('api', 'ACCESSKEY')
-        accessSecret = parser.get('api', 'ACCESSSECRET')
-
-        # Get proxy settings
-        try:
-            proxyURL = parser.get('proxy', 'PROXYURL')
-            proxyPort = parser.get('proxy', 'PROXYPORT')
-            proxy = proxyURL + ':' + proxyPort
-        except:
-            proxy = None
-
-        return consumerKey, consumerSecret, accessKey, accessSecret, proxy
 
     def getUser(self, **kwargs):
         if "userName" in kwargs:
