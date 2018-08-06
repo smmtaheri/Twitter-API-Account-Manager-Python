@@ -6,6 +6,7 @@ import os
 # third-party imports
 import tweepy
 
+
 class TwitterCore:
     def __init__(self, cfg='config.ini'):
         self.__account = None
@@ -24,6 +25,22 @@ class TwitterCore:
         parser = configparser.ConfigParser()
         parser.read(self.cfg)
         self.parser = parser
+    
+    def get_config(self):
+        '''
+        Returns configuration parameters from self.parser
+        '''
+        consumer_key = self.parser.get('Auth', 'ConsumerKey')
+        consumer_secret = self.parser.get('Auth', 'ConsumerSecret')
+        access_key = self.parser.get('Auth', 'AccessKey')
+        access_key = self.parser.get('Auth', 'AccessSecret')
+        proxy = None
+        if self.parser.getboolean('Proxy', 'Enabled'):
+            proxy_url = self.parser.get('Proxy', 'ProxyURL')
+            proxy_port = self.parser.get('Proxy', 'ProxyPort')
+            proxy = proxy_url + ':' + proxy_port
+
+        return consumer_key, consumer_secret, access_key, access_secret, proxy
 
     def login(self, **kwargs):
         'Login to account'
@@ -65,23 +82,6 @@ class TwitterCore:
         else:
             self.__account = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True, proxy=proxy)
         return True
-
-    def get_config(self):
-        '''
-        Returns configuration parameters from self.parser
-        '''
-        consumer_key = self.parser.get('api', 'CONSUMERKEY')
-        consumer_secret = self.parser.get('api', 'CONSUMERSECRET')
-        access_key = self.parser.get('api', 'ACCESSKEY')
-        access_key = self.parser.get('api', 'ACCESSSECRET')
-        try:
-            proxy_url = self.parser.get('proxy', 'PROXYURL')
-            proxy_port = self.parser.get('proxy', 'PROXYPORT')
-            proxy = proxy_url + ':' + proxy_port
-        except:
-            proxy = None
-
-        return consumer_key, consumer_secret, access_key, access_secret, proxy
 
     def getUser(self, **kwargs):
         if "userName" in kwargs:
