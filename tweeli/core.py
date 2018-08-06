@@ -1,7 +1,7 @@
 
 import configparser
 import json
-from os import path
+import os
 
 # third-party imports
 import tweepy
